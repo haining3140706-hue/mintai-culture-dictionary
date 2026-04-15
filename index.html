@@ -37,56 +37,56 @@ const App = () => {
       id: 1,
       role: 'ai',
       type: 'welcome',
-      content: '\u60a8\u597d\uff01\u6211\u662f\u60a8\u7684\u95fd\u53f0\u6587\u5316\u5c0f\u52a9\u624b\u3002\u6709\u4ec0\u4e48\u6211\u53ef\u4ee5\u5e2e\u60a8\u7684\u5417\uff1f\u60a8\u53ef\u4ee5\u95ee\u6211\uff1a',
+      content: '您好！我是您的闽台文化小助手。有什么我可以帮您的吗？您可以问我：',
       suggestions: [
-        '\u95fd\u5357\u8bed\u548c\u53f0\u8bed\u6709\u4ec0\u4e48\u533a\u522b\uff1f',
-        '\u4ecb\u7ecd\u4e00\u4e0b\u4e24\u5cb8\u5171\u540c\u7684\u5143\u5bb5\u4e60\u4fd7',
-        '\u5988\u7956\u6587\u5316\u5728\u95fd\u53f0\u4e24\u5730\u662f\u5982\u4f55\u4f20\u627f\u7684\uff1f'
+        '闽南语和台语有什么区别？',
+        '介绍一下两岸共同的元宵习俗',
+        '妈祖文化在闽台两地是如何传承的？'
       ]
     }
   ]);
 
   const categories = [
-    { id: 1, title: '\u5730\u7406\u5377', sub: '\u798f\u5efa\u81ea\u7136\u5730\u7406\u3001\u53f0\u6e7e\u81ea\u7136\u5730\u7406...' },
-    { id: 2, title: '\u5386\u53f2\u5377', sub: '\u53e4\u4ee3\u53f2\u3001\u8fd1\u73b0\u4ee3\u53f2\u3001\u91cd\u8981\u4e8b\u4ef6...' },
-    { id: 3, title: '\u6c11\u65cf\u4e0e\u5b97\u65cf\u5377', sub: '\u59d3\u6c0f\u6e90\u6d41\u3001\u79fb\u6c11\u8fc1\u5c99\u3001\u65cf\u8c31...' },
-    { id: 4, title: '\u6d77\u6d0b\u6587\u5316\u5377', sub: '\u6d77\u4e0a\u4e1d\u7ef8\u4e4b\u8def\u3001\u5988\u7956\u4fe1\u4ef0\u3001\u9020\u8239...' },
+    { id: 1, title: '地理卷', sub: '福建自然地理、台湾自然地理...' },
+    { id: 2, title: '历史卷', sub: '古代史、近现代史、重要事件...' },
+    { id: 3, title: '民族与宗族卷', sub: '姓氏源流、移民迁岙、族谱...' },
+    { id: 4, title: '海洋文化卷', sub: '海上丝绸之路、妈祖信仰、造船...' },
   ];
 
   const searchResults = [
-    { id: 101, title: '\u798f\u5dde\u5e9c', chapter: '\u5730\u7406\u5377 \u00b7 \u798f\u5efa\u5386\u53f2\u5730\u7406', snippet: '\u798f\u5dde\u5e9c\uff0c\u95fd\u53bf\u9644\u90ed\u3002\u4e1c\u81f3\u6d77\uff0c\u897f\u81f3\u5ef6\u5e73\u5e9c\u53e4\u7530\u53bf\u754c...', match: 0.98 },
-    { id: 102, title: '\u798f\u5dde\u5730\u8c8c', chapter: '\u5730\u7406\u5377 \u00b7 \u798f\u5efa\u81ea\u7136\u5730\u7406', snippet: '\u798f\u5dde\u76c6\u5730\u5904\u4e8e\u95fd\u6c5f\u4e0b\u6e38\uff0c\u56db\u5468\u5c71\u5cf6\u73af\u62b1\uff0c\u5177\u6709\u5178\u578b\u7684\u76c6\u5730\u7279\u5f81...', match: 0.85 },
+    { id: 101, title: '福州府', chapter: '地理卷 · 福建历史地理', snippet: '福州府，闽县附郭。东至海，西至延平府古田县界...', match: 0.98 },
+    { id: 102, title: '福州地貌', chapter: '地理卷 · 福建自然地理', snippet: '福州盆地处于闽江下游，四周山島环抱，具有典型的盆地特征...', match: 0.85 },
   ];
 
   const articleContent = {
-    title: { simp: '\u5988\u7956\u6587\u5316', trad: '\u5b6d\u7956\u6587\u5316' },
-    chapter: { simp: '\u6d77\u6d0b\u6587\u5316\u5377 \u00b7 \u4fe1\u4ef0', trad: '\u6d77\u6d0b\u6587\u5316\u5377 \u00b7 \u4fe1\u4ef0' },
-    imageCaption: { simp: '\u56fe1\uff1a\u65e9\u671f\u5988\u7956\u796d\u5178\u56fe\u793a\uff08\u9009\u81ea\u300a\u95fd\u53f0\u5386\u53f2\u56fe\u9274\u300b\uff09', trad: '\u57161\uff1a\u65e9\u671f\u5b6d\u7956\u796d\u5178\u5716\u793a\uff08\u9078\u81ea\u300a\u95fd\u53f0\u6b77\u53f2\u5716\u9a8c\u300b\uff09' },
+    title: { simp: '妈祖文化', trad: '孭祖文化' },
+    chapter: { simp: '海洋文化卷 · 信仰', trad: '海洋文化卷 · 信仰' },
+    imageCaption: { simp: '图1：早期妈祖祭典图示（选自《闽台历史图鉴》）', trad: '圖1：早期孭祖祭典圖示（選自《闽台歷史圖验》）' },
     paragraphs: [
       {
-        simp: '\u5988\u7956\u662f\u6d41\u4f20\u4e8e\u4e2d\u56fd\u6d77\u6d0b\u5730\u533a\u7684\u6c11\u95f4\u4fe1\u4ef0\u3002\u5988\u7956\u6587\u5316\u4f5c\u4e3a\u95fd\u53f0\u6587\u5316\u7684\u91cd\u8981\u7ec4\u6210\u90e8\u5206\uff0c\u6df1\u6df1\u683d\u6839\u4e8e\u4e24\u5cb8\u6c11\u4f17\u7684\u751f\u6d3b\u4e2d\u3002\u636e\u8bb0\u8f7d\uff0c\u5988\u7956\u539f\u540d\u6797\u9edb\uff0c\u5b8b\u4ee3\u798f\u5efa\u8386\u7530\u6f7c\u6d32\u5c9b\u4eba\u3002\u5979\u4e00\u751f\u884c\u5584\u79ef\u5fb7\uff0c\u6551\u52a9\u6d77\u96be\uff0c\u88ab\u5c0a\u4e3a\u201c\u6d77\u4e0a\u5973\u795e\u201d\u3002',
-        trad: '\u5b6d\u7956\u662f\u6d41\u50b3\u65bc\u4e2d\u5706\u6d77\u6d0b\u5730\u5340\u7684\u6c11\u9593\u4fe1\u4ef0\u3002\u5b6d\u7956\u6587\u5316\u4f5c\u70ba\u95fd\u53f0\u6587\u5316\u7684\u91cd\u8981\u7d44\u6210\u90e8\u5206\uff0c\u6df1\u6df1\u6839\u6839\u65bc\u5169\u5cb8\u6c11\u773e\u7684\u751f\u6d3b\u4e2d\u3002\u64da\u8a18\u8f7d\uff0c\u5b6d\u7956\u539f\u540d\u6797\u9edb\uff0c\u5b8b\u4ee3\u798f\u5efa\u8386\u7530\u6f7c\u6d32\u5cf6\u4eba\u3002\u5979\u4e00\u751f\u884c\u5584\u7a4d\u5fb7\uff0c\u6551\u52a9\u6d77\u96be\uff0c\u88ab\u5c0a\u70ba\u300c\u6d77\u4e0a\u5973\u795e\u300d\u3002'
+        simp: '妈祖是流传于中国海洋地区的民间信仰。妈祖文化作为闽台文化的重要组成部分，深深栽根于两岸民众的生活中。据记载，妈祖原名林黛，宋代福建莆田潼洲岛人。她一生行善积德，救助海难，被尊为“海上女神”。',
+        trad: '孭祖是流傳於中圆海洋地區的民間信仰。孭祖文化作為闽台文化的重要組成部分，深深根根於兩岸民眾的生活中。據記载，孭祖原名林黛，宋代福建莆田潼洲島人。她一生行善積德，救助海难，被尊為「海上女神」。'
       },
       {
-        simp: '\u5728\u53f0\u6e7e\uff0c\u5988\u7956\u4fe1\u4ef0\u6781\u4e3a\u666e\u904d\uff0c\u5927\u5927\u5c0f\u5c0f\u7684\u5988\u7956\u5e99\u904d\u5e03\u5404\u5e02\u9547\u4e61\u6751\u3002\u6bcf\u5e74\u7684\u201c\u5988\u7956\u7ed5\u5883\u201d\u6d3b\u52a8\u66f4\u662f\u89c4\u6a21\u5b8f\u5927\uff0c\u88ab\u8ba4\u4e3a\u5168\u7403\u4e09\u5927\u5b97\u6559\u76db\u4e8b\u4e4b\u4e00\u3002\u4e24\u5cb8\u5988\u7956\u6587\u5316\u540c\u6839\u540c\u6e90\uff0c\u8fd1\u5e74\u6765\uff0c\u53f0\u6e7e\u6578\u767e\u5bb6\u5bab\u5e99\u7684\u4fe1\u4f17\u591a\u6b21\u8d74\u6f7c\u6d32\u5c9b\u8c16\u7956\u8fdb\u9999\uff0c\u6210\u4e3a\u95fd\u53f0\u6587\u5316\u4ea4\u6d41\u7684\u91cd\u8981\u7ef4\u5e26\u3002',
-        trad: '\u5728\u53f0\u7063\uff0c\u5b6d\u7956\u4fe1\u4ef0\u6975\u70ba\u666e\u904d\uff0c\u5927\u5927\u5c0f\u5c0f\u7684\u5b6d\u7956\u5b99\u904d\u4f48\u5404\u5e02\u93ae\u9109\u6751\u3002\u6bcf\u5e74\u7684\u300c\u5b6d\u7956\u7e5e\u5883\u300d\u6d3b\u52d5\u66f4\u662f\u898f\u6a21\u5b8f\u5927\uff0c\u88ab\u8a8c\u70ba\u5168\u7403\u4e09\u5927\u5b97\u6559\u76db\u4e8b\u4e4b\u4e00\u3002\u5169\u5cb8\u5b6d\u7956\u6587\u5316\u540c\u6839\u540c\u6e90\uff0c\u8fd1\u5e74\u4f86\uff0c\u53f0\u7063\u6578\u767e\u5bb6\u5bae\u5b99\u7684\u4fe1\u773e\u591a\u6b21\u8d74\u6f7c\u6d32\u5cf6\u8c16\u7956\u9032\u9999\uff0c\u6210\u70ba\u95fd\u53f0\u6587\u5316\u4ea4\u6d41\u7684\u91cd\u8981\u7dad\u5e36\u3002'
+        simp: '在台湾，妈祖信仰极为普遍，大大小小的妈祖庙遍布各市镇乡村。每年的“妈祖绕境”活动更是规模宏大，被认为全球三大宗教盛事之一。两岸妈祖文化同根同源，近年来，台湾數百家宫庙的信众多次赴潼洲岛谖祖进香，成为闽台文化交流的重要维带。',
+        trad: '在台灣，孭祖信仰極為普遍，大大小小的孭祖宙遍佈各市鎮鄉村。每年的「孭祖繞境」活動更是規模宏大，被誌為全球三大宗教盛事之一。兩岸孭祖文化同根同源，近年來，台灣數百家宮宙的信眾多次赴潼洲島谖祖進香，成為闽台文化交流的重要維帶。'
       }
     ],
-    tags: { simp: ['\u6c11\u4fd7', '\u4fe1\u4ef0', '\u6d77\u6d0b\u6587\u5316'], trad: ['\u6c11\u4fd7', '\u4fe1\u4ef0', '\u6d77\u6d0b\u6587\u5316'] }
+    tags: { simp: ['民俗', '信仰', '海洋文化'], trad: ['民俗', '信仰', '海洋文化'] }
   };
 
   const knowledgeBase = {
-    '\u95fd\u5357\u8bed\u548c\u53f0\u8bed\u6709\u4ec0\u4e48\u533a\u522b\uff1f': {
-      content: '\u6839\u636e\u300a\u95fd\u53f0\u6587\u5316\u5927\u8f91\u300b\u76f8\u5173\u8bb0\u8f7d\uff0c\u95fd\u5357\u8bed\u548c\u53f0\u8bed\u540c\u5c5e\u95fd\u5357\u8bed\u7cfb\u3002\u53f0\u6e7e\u95fd\u5357\u8bed\uff08\u53f0\u8bed\uff09\u4e3b\u8981\u6e90\u81ea\u798f\u5efa\u6cc9\u5dde\u548c\u6f33\u5dde\uff0c\u4f46\u5728\u957f\u671f\u7684\u5386\u53f2\u53d1\u5c55\u4e2d\uff0c\u53f0\u8bed\u5438\u6536\u4e86\u90e8\u5206\u5e73\u57e0\u65cf\u8bed\u8a00\u3001\u65e5\u8bed\u53ca\u5916\u6765\u8bed\u8bcd\u6c47\uff0c\u5728\u8bed\u97f3\u548c\u90e8\u5206\u7279\u8272\u8bcd\u6c47\u4e0a\u4e0e\u798f\u5efa\u672c\u571f\u95fd\u5357\u8bed\u4ea7\u751f\u4e86\u7ec6\u5c0f\u5dee\u5f02\uff0c\u4f46\u4e24\u8005\u6838\u5fc3\u8bcd\u6c47\u4e0e\u8bed\u6cd5\u4e00\u81f4\uff0c\u4f9d\u7136\u5b8c\u5168\u4e92\u901a\u3002',
-      source: '\u8bed\u8a00\u5377 \u00b7 \u95fd\u53f0\u65b9\u8a00'
+    '闽南语和台语有什么区别？': {
+      content: '根据《闽台文化大辑》相关记载，闽南语和台语同属闽南语系。台湾闽南语（台语）主要源自福建泉州和漳州，但在长期的历史发展中，台语吸收了部分平埠族语言、日语及外来语词汇，在语音和部分特色词汇上与福建本土闽南语产生了细小差异，但两者核心词汇与语法一致，依然完全互通。',
+      source: '语言卷 · 闽台方言'
     },
-    '\u4ecb\u7ecd\u4e00\u4e0b\u4e24\u5cb8\u5171\u540c\u7684\u5143\u5bb5\u4e60\u4fd7': {
-      content: '\u300a\u95fd\u53f0\u6587\u5316\u5927\u8f91\u300b\u8bb0\u8f7d\uff0c\u4e24\u5cb8\u5143\u5bb5\u8282\u9664\u4e86\u8d4f\u82b1\u706f\u3001\u731c\u706f\u8c23\u3001\u5403\u6c64\u5706\u7b49\u5171\u540c\u4e60\u4fd7\u5916\uff0c\u5728\u95fd\u53f0\u5730\u533a\u8fd8\u6709\u72ec\u7279\u7684\u201c\u94bb\u706f\u811a\u201d\uff08\u5bd3\u610f\u7948\u6c42\u5b50\uff09\u4ee5\u53ca\u76db\u5927\u7684\u201c\u8fce\u795e\u8d5b\u4f1a\u201d\u3002\u4f8b\u5982\u53f0\u6e7e\u7684\u201c\u76d0\u6c34\u870a\u70ae\u201d\u3001\u201c\u5e73\u6e56\u5929\u706f\u201d\u4e0e\u798f\u5efa\u672c\u571f\u7684\u201c\u6e38\u795e\u201d\u3001\u201c\u8e0f\u8861\u201d\u6d3b\u52a8\uff0c\u540c\u6839\u540c\u6e90\uff0c\u90fd\u662f\u5143\u5bb5\u671f\u95f4\u91cd\u8981\u7684\u6c11\u4fd7\u72c2\u6b22\u3002',
-      source: '\u6c11\u4fd7\u5377 \u00b7 \u4f20\u7edf\u8282\u65e5'
+    '介绍一下两岸共同的元宵习俗': {
+      content: '《闽台文化大辑》记载，两岸元宵节除了赏花灯、猜灯谣、吃汤圆等共同习俗外，在闽台地区还有独特的“钻灯脚”（寓意祈求子）以及盛大的“迎神赛会”。例如台湾的“盐水蜊炮”、“平湖天灯”与福建本土的“游神”、“踏衡”活动，同根同源，都是元宵期间重要的民俗狂欢。',
+      source: '民俗卷 · 传统节日'
     },
-    '\u5988\u7956\u6587\u5316\u5728\u95fd\u53f0\u4e24\u5730\u662f\u5982\u4f55\u4f20\u627f\u7684\uff1f': {
-      content: '\u6839\u636e\u300a\u95fd\u53f0\u6587\u5316\u5927\u8f91\u300b\u76f8\u5173\u8bb0\u8f7d\uff0c\u5988\u7956\u6587\u5316\u5728\u4e24\u5730\u7684\u4f20\u627f\u4e3b\u8981\u4f53\u73b0\u5728\uff1a\n\n1. \u796d\u7940\u4eea\u5178\uff1a\u6f7c\u6d32\u7956\u5b99\u4e0e\u53f0\u6e7e\u5404\u5927\u5988\u7956\u5b99\u4fdd\u6301\u7740\u5bc6\u5207\u7684\u201c\u5206\u7075\u201d\u5173\u7cfb\u3002\n2. \u6c11\u4fd7\u6d3b\u52a8\uff1a\u5305\u542b\u76db\u5927\u7684\u7ed5\u5883\u5de1\u5b89\u3001\u8fdb\u9999\u7948\u798f\u7b49\u3002\n3. \u6587\u5316\u8ba4\u540c\uff1a\u5988\u7956\u4f5c\u4e3a\u201c\u6d77\u4e0a\u5973\u795e\u201d\uff0c\u662f\u4e24\u5cb8\u6c11\u4f17\u7684\u5171\u540c\u4fdd\u62a4\u795e\uff0c\u6210\u4e3a\u6df1\u539a\u7684\u60c5\u611f\u8fde\u63a5\u7ef4\u7eb9\u3002',
-      source: '\u6d77\u6d0b\u6587\u5316\u5377 \u00b7 \u4fe1\u4ef0'
+    '妈祖文化在闽台两地是如何传承的？': {
+      content: '根据《闽台文化大辑》相关记载，妈祖文化在两地的传承主要体现在：\n\n1. 祭祀仪典：潼洲祖宙与台湾各大妈祖宙保持着密切的“分灵”关系。\n2. 民俗活动：包含盛大的绕境巡安、进香祈福等。\n3. 文化认同：妈祖作为“海上女神”，是两岸民众的共同保护神，成为深厚的情感连接维纹。',
+      source: '海洋文化卷 · 信仰'
     }
   };
 
@@ -108,8 +108,8 @@ const App = () => {
     setChatInput('');
     setTimeout(() => {
       const answer = knowledgeBase[text] || {
-        content: '\u5173\u4e8e\u8fd9\u4e2a\u95ee\u9898\uff0c\u300a\u95fd\u53f0\u6587\u5316\u5927\u8f91\u300b\u4e2d\u6682\u65f6\u6ca1\u6709\u76f4\u63a5\u5bf9\u5e94\u7684\u8bcd\u6761\u8bb0\u8f7d\u3002\u60a8\u53ef\u4ee5\u5c1d\u8bd5\u63d0\u95ee\u4e0a\u65b9\u793a\u4f8b\u4e2d\u7684\u95ee\u9898\u3002',
-        source: '\u667a\u80fd\u68c0\u7d22\u5f15\u64ce'
+        content: '关于这个问题，《闽台文化大辑》中暂时没有直接对应的词条记载。您可以尝试提问上方示例中的问题。',
+        source: '智能检索引擎'
       };
       const newAiMsg = { id: Date.now() + 1, role: 'ai', type: 'answer', ...answer };
       setChatHistory(prev => [...prev, newAiMsg]);
@@ -128,11 +128,11 @@ const App = () => {
   const renderHome = () => (
     <div className="flex flex-col h-full bg-slate-50">
       <div className="bg-[#B91C1C] text-white p-6 pt-12 rounded-b-3xl shadow-lg relative">
-        <h1 className="text-2xl font-bold mb-2">\u95fd\u53f0\u6587\u5316\u5927\u8f91</h1>
-        <p className="text-red-100 text-sm opacity-80 italic">\u6570\u5b57\u5316\u9605\u8bfb\u4e0e\u68c0\u7d22\u5e73\u53f0</p>
+        <h1 className="text-2xl font-bold mb-2">闽台文化大辑</h1>
+        <p className="text-red-100 text-sm opacity-80 italic">数字化阅读与检索平台</p>
         <div className="mt-6 flex bg-white rounded-full px-4 py-3 items-center shadow-inner">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 shrink-0"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input type="text" placeholder="\u641c\u8bcd\u6761\u3001\u641c\u5386\u53f2\u3001\u641c\u6c11\u4fd7..." className="bg-transparent border-none outline-none text-gray-800 placeholder:text-gray-400 w-full text-sm" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onFocus={() => setIsSearching(true)} />
+          <input type="text" placeholder="搜词条、搜历史、搜民俗..." className="bg-transparent border-none outline-none text-gray-800 placeholder:text-gray-400 w-full text-sm" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onFocus={() => setIsSearching(true)} />
           {searchQuery && (
             <button onClick={() => setSearchQuery('')} className="shrink-0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -141,7 +141,7 @@ const App = () => {
         </div>
       </div>
       <div className="flex-1 overflow-y-auto px-4 py-6">
-        <h2 className="text-gray-800 font-bold border-l-4 border-[#B91C1C] pl-2 mb-4">\u5377\u76ee\u5bfc\u822a</h2>
+        <h2 className="text-gray-800 font-bold border-l-4 border-[#B91C1C] pl-2 mb-4">卷目导航</h2>
         <div className="space-y-3">
           {categories.map((item) => (
             <div key={item.id} className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between cursor-pointer active:bg-slate-50" onClick={() => setActiveTab('reader')}>
@@ -172,17 +172,17 @@ const App = () => {
       </div>
       <div className="flex-1 overflow-y-auto p-4">
         <div className="flex justify-between items-center mb-4 px-1">
-          <span className="text-xs text-gray-500">\u627e\u5230 {searchResults.length} \u4e2a\u76f8\u5173\u8bcd\u6761</span>
-          <span className="text-xs text-indigo-600 font-medium">\u6309\u5339\u914d\u5ea6\u6392\u5e8f</span>
+          <span className="text-xs text-gray-500">找到 {searchResults.length} 个相关词条</span>
+          <span className="text-xs text-indigo-600 font-medium">按匹配度排序</span>
         </div>
         <div className="space-y-4">
           {searchResults.map((res) => (
             <div key={res.id} className="p-4 border border-slate-100 rounded-xl active:bg-slate-50 cursor-pointer" onClick={() => {setIsSearching(false); setActiveTab('reader');}}>
               <div className="flex justify-between items-start mb-1">
-                <h3 className="font-bold text-[#B91C1C]">{renderHighlightedText(res.title, searchQuery || '\u798f\u5dde')}</h3>
+                <h3 className="font-bold text-[#B91C1C]">{renderHighlightedText(res.title, searchQuery || '福州')}</h3>
                 <span className="text-[10px] bg-slate-100 text-gray-500 px-2 py-0.5 rounded">{res.chapter}</span>
               </div>
-              <p className="text-xs text-gray-600 leading-relaxed mt-2">{renderHighlightedText(res.snippet, searchQuery || '\u798f\u5dde')}</p>
+              <p className="text-xs text-gray-600 leading-relaxed mt-2">{renderHighlightedText(res.snippet, searchQuery || '福州')}</p>
             </div>
           ))}
         </div>
@@ -198,7 +198,7 @@ const App = () => {
         </button>
         <div className="flex space-x-2">
           <button onClick={() => setFontSize(fontSize === 'large' ? 'medium' : 'large')} className="px-2.5 py-1 text-xs border border-gray-200 rounded text-gray-600 font-medium active:bg-slate-50">A+</button>
-          <button onClick={() => setIsTraditional(!isTraditional)} className={`px-2.5 py-1 text-xs border rounded font-medium transition-colors ${isTraditional ? 'bg-[#B91C1C] text-white border-[#B91C1C]' : 'border-gray-200 text-gray-600 active:bg-slate-50'}`}> {isTraditional ? '\u7e41\u4f53' : '\u7e41\u4f53'} </button>
+          <button onClick={() => setIsTraditional(!isTraditional)} className={`px-2.5 py-1 text-xs border rounded font-medium transition-colors ${isTraditional ? 'bg-[#B91C1C] text-white border-[#B91C1C]' : 'border-gray-200 text-gray-600 active:bg-slate-50'}`}> {isTraditional ? '繁体' : '繁体'} </button>
         </div>
       </div>
       <div className="flex-1 overflow-y-auto">
@@ -208,7 +208,7 @@ const App = () => {
           <div className="mb-6 rounded-lg overflow-hidden border border-slate-100 bg-slate-50">
             <div className="aspect-video flex flex-col items-center justify-center text-gray-300">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              <span className="text-xs mt-2">\u8f91\u5178\u5386\u53f2\u5f71\u50cf\u8d44\u6e90\u52a0\u8f7d\u4e2d...</span>
+              <span className="text-xs mt-2">辑典历史影像资源加载中...</span>
             </div>
             <div className="p-2 text-center border-t border-slate-100 bg-white">
               <p className="text-[11px] text-gray-500">{articleContent.imageCaption[langKey]}</p>
@@ -230,10 +230,10 @@ const App = () => {
         <div className="flex items-center justify-between border-b border-slate-50 pb-3">
           <button className="flex items-center text-sm text-gray-500 active:text-[#B91C1C]">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-0.5"><polyline points="15 18 9 12 15 6"/></svg>
-            {isTraditional ? '\u4e0a\u4e00\u8bcd\u689d' : '\u4e0a\u4e00\u8bcd\u6761'}
+            {isTraditional ? '上一词條' : '上一词条'}
           </button>
           <button className="flex items-center text-sm text-gray-500 active:text-[#B91C1C]">
-            {isTraditional ? '\u4e0b\u4e00\u8bcd\u689d' : '\u4e0b\u4e00\u8bcd\u6761'}
+            {isTraditional ? '下一词條' : '下一词条'}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="ml-0.5"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
         </div>
@@ -248,13 +248,13 @@ const App = () => {
             </button>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="text-xs font-bold text-gray-700">{isTraditional ? '\u6b63\u5728\u6717\u8bfb' : '\u6b63\u5728\u6717\u8bfb'}</span>
+                <span className="text-xs font-bold text-gray-700">{isTraditional ? '正在朗读' : '正在朗读'}</span>
                 <select className="text-[10px] bg-slate-100 px-1 py-0.5 rounded outline-none border-r-4 border-transparent text-gray-600" value={audioLang} onChange={(e) => setAudioLang(e.target.value)}>
-                  <option value="mandarin">{isTraditional ? '\u666e\u901a\u8bdd' : '\u666e\u901a\u8bdd'}</option>
-                  <option value="minnan">{isTraditional ? '\u95fd\u5357\u8bed' : '\u95fd\u5357\u8bed'}</option>
+                  <option value="mandarin">{isTraditional ? '普通话' : '普通话'}</option>
+                  <option value="minnan">{isTraditional ? '闽南语' : '闽南语'}</option>
                 </select>
               </div>
-              <p className="text-[10px] text-gray-400 mt-0.5">{isTraditional ? '\u8bed\u901f' : '\u8bed\u901f'} 1.0x</p>
+              <p className="text-[10px] text-gray-400 mt-0.5">{isTraditional ? '语速' : '语速'} 1.0x</p>
             </div>
           </div>
         </div>
@@ -269,13 +269,13 @@ const App = () => {
           <div className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center text-white">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           </div>
-          <h2 className="font-bold text-gray-800">\u6587\u5316\u77e5\u8bc6\u52a9\u624b</h2>
+          <h2 className="font-bold text-gray-800">文化知识助手</h2>
         </div>
-        <p className="text-[10px] text-gray-400 mt-1">\u57fa\u4e8e\u300a\u95fd\u53f0\u6587\u5316\u5927\u8f91\u300b\u77e5\u8bc6\u5e93</p>
+        <p className="text-[10px] text-gray-400 mt-1">基于《闽台文化大辑》知识库</p>
       </div>
       <div className="flex-1 overflow-y-auto p-4 space-y-5 scroll-smooth">
         <div className="flex justify-center">
-          <span className="bg-slate-200/60 text-slate-500 text-[10px] px-3 py-1 rounded-full">\u6b22\u8fce\u4f7f\u7528\uff0c\u60a8\u53ef\u4ee5\u8be2\u95ee\u5173\u4e8e\u95fd\u53f0\u6587\u5316\u3001\u5386\u53f2\u3001\u6c11\u4fd7\u7684\u95ee\u9898</span>
+          <span className="bg-slate-200/60 text-slate-500 text-[10px] px-3 py-1 rounded-full">欢迎使用，您可以询问关于闽台文化、历史、民俗的问题</span>
         </div>
         {chatHistory.map((msg) => (
           <div key={msg.id}>
@@ -297,8 +297,8 @@ const App = () => {
                     <>
                       <div className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">{msg.content}</div>
                       <div className="mt-3 flex justify-between items-center text-[10px] text-gray-400 border-t border-slate-100 pt-2">
-                        <span>\u6765\u6e90\uff1a{msg.source}</span>
-                        <button className="text-indigo-600 font-medium active:opacity-70">\u67e5\u770b\u539f\u6587</button>
+                        <span>来源：{msg.source}</span>
+                        <button className="text-indigo-600 font-medium active:opacity-70">查看原文</button>
                       </div>
                     </>
                   )}
@@ -306,7 +306,7 @@ const App = () => {
               </div>
             ) : (
               <div className="flex items-start flex-row-reverse space-x-3 space-x-reverse mt-2">
-                <div className="w-8 h-8 bg-[#B91C1C] rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs font-bold">\u6211</div>
+                <div className="w-8 h-8 bg-[#B91C1C] rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs font-bold">我</div>
                 <div className="bg-[#B91C1C] text-white p-3 rounded-2xl rounded-tr-none shadow-sm max-w-[80%]">
                   <p className="text-sm leading-relaxed">{msg.content}</p>
                 </div>
@@ -317,7 +317,7 @@ const App = () => {
         <div ref={chatEndRef} className="h-1" />
       </div>
       <div className="bg-white p-4 border-t flex items-center space-x-2 pb-8">
-        <input type="text" value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleSendQuestion(chatInput)} placeholder="\u8f93\u5165\u60a8\u60f3\u4e86\u89e3\u7684\u95ee\u9898..." className="flex-1 bg-slate-100 rounded-full px-4 py-2 text-sm outline-none" />
+        <input type="text" value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleSendQuestion(chatInput)} placeholder="输入您想了解的问题..." className="flex-1 bg-slate-100 rounded-full px-4 py-2 text-sm outline-none" />
         <button onClick={() => handleSendQuestion(chatInput)} className="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center shadow-md active:scale-95 transition-transform shrink-0">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginLeft:'1px'}}><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </button>
@@ -333,8 +333,8 @@ const App = () => {
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           </div>
           <div>
-            <h2 className="text-lg font-bold text-gray-800">\u6587\u5316\u9605\u8bfb\u8005_9527</h2>
-            <span className="inline-flex items-center mt-1 px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] rounded-full">\u666e\u901a\u7528\u6237</span>
+            <h2 className="text-lg font-bold text-gray-800">文化阅读者_9527</h2>
+            <span className="inline-flex items-center mt-1 px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] rounded-full">普通用户</span>
           </div>
         </div>
       </div>
@@ -345,18 +345,18 @@ const App = () => {
             <div className="text-[#F2D29E]">
               <div className="flex items-center space-x-2 mb-1">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 19h19l-.5-2.5L17 14l-2.5-6.5L12 11 9.5 7.5 7 14l-4 2.5L2.5 19z"/></svg>
-                <h3 className="font-bold text-lg">\u8f91\u5178\u6570\u5b57\u4f1a\u5458</h3>
+                <h3 className="font-bold text-lg">辑典数字会员</h3>
               </div>
-              <p className="text-xs opacity-80">\u5f00\u901a\u4f1a\u5458\uff0c\u89e3\u9501\u8f91\u5178\u5168\u90e8\u77e5\u8bc6</p>
+              <p className="text-xs opacity-80">开通会员，解锁辑典全部知识</p>
             </div>
-            <button className="bg-gradient-to-r from-[#EED39A] to-[#D5B06C] text-[#332200] text-xs font-bold px-4 py-2 rounded-full shadow-md active:scale-95 transition-transform">\u7acb\u5373\u5f00\u901a</button>
+            <button className="bg-gradient-to-r from-[#EED39A] to-[#D5B06C] text-[#332200] text-xs font-bold px-4 py-2 rounded-full shadow-md active:scale-95 transition-transform">立即开通</button>
           </div>
           <div className="mt-5 grid grid-cols-4 gap-2 text-center text-[#F2D29E]/80 relative z-10">
             {[
-              {icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>, label: '\u5343\u4e07\u5b57\u7545\u8bfb'},
-              {icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>, label: '\u65b9\u8a00\u4f34\u8bfb'},
-              {icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, label: 'AI\u65e0\u9650\u95ee\u7b54'},
-              {icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>, label: '\u7eb8\u4e66\u8054\u52a8'}
+              {icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>, label: '千万字畅读'},
+              {icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>, label: '方言伴读'},
+              {icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, label: 'AI无限问答'},
+              {icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>, label: '纸书联动'}
             ].map((item, i) => (
               <div key={i} className="flex flex-col items-center">
                 <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center mb-1">{item.icon}</div>
@@ -373,8 +373,8 @@ const App = () => {
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
             </div>
             <div>
-              <h4 className="text-sm font-bold text-gray-800">\u5df2\u8d2d\u7eb8\u4e66\u9a8c\u8bc1</h4>
-              <p className="text-[10px] text-gray-500 mt-0.5">\u626b\u63cf\u300a\u95fd\u53f0\u6587\u5316\u5927\u8f91\u300b\u9632\u4f2a\u7801\u5151\u6362\u6743\u76ca</p>
+              <h4 className="text-sm font-bold text-gray-800">已购纸书验证</h4>
+              <p className="text-[10px] text-gray-500 mt-0.5">扫描《闽台文化大辑》防伪码兑换权益</p>
             </div>
           </div>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
@@ -383,9 +383,9 @@ const App = () => {
       <div className="px-4 mt-4 mb-20 space-y-3">
         <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
           {[
-            {icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, label: '\u9605\u8bfb\u5386\u53f2'},
-            {icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>, label: '\u6211\u7684\u8ba2\u5355'},
-            {icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>, label: '\u8bbe\u7f6e\u4e0e\u5e2e\u52a9'}
+            {icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, label: '阅读历史'},
+            {icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>, label: '我的订单'},
+            {icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>, label: '设置与帮助'}
           ].map((item, i, arr) => (
             <div key={i} className={`flex items-center justify-between p-4 ${i < arr.length - 1 ? 'border-b border-slate-50' : ''} active:bg-slate-50 cursor-pointer`}>
               <div className="flex items-center space-x-3 text-gray-700">
@@ -414,9 +414,9 @@ const App = () => {
         {!isSearching && (
           <div className="h-16 bg-white border-t flex items-center justify-around pb-2">
             {[
-              {tab:'home', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>, label: '\u8f91\u5178\u76ee\u5f55'},
-              {tab:'ai', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, label: 'AI \u95ee\u7b54'},
-              {tab:'profile', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>, label: '\u6211\u7684\u6743\u76ca'}
+              {tab:'home', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>, label: '辑典目录'},
+              {tab:'ai', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, label: 'AI 问答'},
+              {tab:'profile', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>, label: '我的权益'}
             ].map(item => (
               <button key={item.tab} onClick={() => setActiveTab(item.tab)} className={`flex flex-col items-center space-y-1 ${activeTab === item.tab ? 'text-[#B91C1C]' : 'text-gray-400'}`}>
                 {item.icon}
