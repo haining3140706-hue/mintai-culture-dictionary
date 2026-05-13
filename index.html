@@ -2,24 +2,442 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>闽台文化大辞典</title>
-<script src="./react.production.min.js" crossorigin></script>
-<script src="./react-dom.production.min.js" crossorigin></script>
-<script src="./babel.min.js"></script>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
+  body {
+    font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #e2e8f0;
+    overflow: hidden;
+  }
   ::-webkit-scrollbar { width: 0; height: 0; }
   .indent-8 { text-indent: 2em; }
   .scroll-smooth { scroll-behavior: smooth; }
+
+  /* 自定义字体类 */
+  .font-serif-sc { font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', serif; }
+  .font-sans-sc { font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; }
+
+  /* 动画 */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+  @keyframes sound-wave {
+    0%, 100% { transform: scaleY(0.3); }
+    50% { transform: scaleY(1); }
+  }
+  .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+  .animate-slide-up { animation: slideUp 0.5s ease-out forwards; }
+  .animate-pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
+
+  /* 列表项依次进入动画 */
+  .stagger-1 { animation-delay: 0.05s; opacity: 0; animation: fadeIn 0.4s ease-out 0.05s forwards; }
+  .stagger-2 { animation-delay: 0.1s; opacity: 0; animation: fadeIn 0.4s ease-out 0.1s forwards; }
+  .stagger-3 { animation-delay: 0.15s; opacity: 0; animation: fadeIn 0.4s ease-out 0.15s forwards; }
+  .stagger-4 { animation-delay: 0.2s; opacity: 0; animation: fadeIn 0.4s ease-out 0.2s forwards; }
+
+  /* 卡片悬停效果 */
+  .card-hover {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card-hover:active {
+    transform: scale(0.98);
+    background-color: #f8fafc;
+  }
+
+  /* 按钮点击效果 */
+  .btn-press {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn-press:active {
+    transform: scale(0.95);
+  }
+
+  /* 搜索框聚焦效果 */
+  .search-focus {
+    transition: box-shadow 0.3s ease;
+  }
+  .search-focus:focus-within {
+    box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.15), 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  /* 音频波形动画 */
+  .sound-bar {
+    animation: sound-wave 1s ease-in-out infinite;
+  }
+  .sound-bar:nth-child(2) { animation-delay: 0.1s; }
+  .sound-bar:nth-child(3) { animation-delay: 0.2s; }
+  .sound-bar:nth-child(4) { animation-delay: 0.3s; }
+
+  /* 标签样式 */
+  .tag-pill {
+    transition: all 0.2s ease;
+  }
+  .tag-pill:active {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+
+  /* 底部导航图标动画 */
+  .nav-icon {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .nav-item-active .nav-icon {
+    transform: translateY(-2px);
+  }
+
+  /* 高亮文字样式 */
+  .highlight-match {
+    background: linear-gradient(180deg, transparent 60%, #fef08a 60%);
+    color: #111827;
+    font-weight: 500;
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+
+  /* 会员卡片光效 */
+  .vip-card {
+    position: relative;
+    overflow: hidden;
+  }
+  .vip-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
+    animation: rotate 20s linear infinite;
+  }
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* 消息气泡动画 */
+  .msg-bubble {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  /* 阅读器图片占位 */
+  .img-placeholder {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  }
 </style>
 </head>
 <body>
 <div id="root"></div>
+
 <script type="text/babel">
-const { useState, useRef, useEffect } = React;
+const { useState, useRef, useEffect, useCallback } = React;
+
+// ==================== 常量配置 ====================
+const THEME = {
+  primary: '#B91C1C',
+  primaryLight: '#fef2f2',
+  primaryDark: '#991b1b',
+  accent: '#4f46e5',
+  accentLight: '#eef2ff',
+  bg: '#f8fafc',
+  card: '#ffffff',
+  text: '#1f2937',
+  textSecondary: '#6b7280',
+  textMuted: '#9ca3af',
+  border: '#e5e7eb',
+  borderLight: '#f3f4f6',
+};
+
+const CATEGORIES = [
+  { id: 1, title: '地理卷', sub: '福建自然地理、台湾自然地理、地貌水文、气候生态', icon: '地', color: '#dc2626' },
+  { id: 2, title: '历史卷', sub: '古代史、近现代史、重要事件、人物传记', icon: '历', color: '#ea580c' },
+  { id: 3, title: '民族与宗族卷', sub: '姓氏源流、移民迁台、族谱宗祠、宗族文化', icon: '民', color: '#d97706' },
+  { id: 4, title: '海洋文化卷', sub: '海上丝绸之路、妈祖信仰、造船航海、渔俗', icon: '海', color: '#0891b2' },
+  { id: 5, title: '语言卷', sub: '闽南方言、客家话、台湾国语、语言演变', icon: '语', color: '#7c3aed' },
+  { id: 6, title: '民俗卷', sub: '传统节日、婚丧嫁娶、民间信仰、饮食文化', icon: '俗', color: '#be185d' },
+];
+
+const SEARCH_RESULTS = [
+  { id: 101, title: '福州府', chapter: '地理卷 · 福建历史地理', snippet: '福州府，闽县附郭。东至海，西至延平府古田县界，南至兴化府莆田县界，北至福宁府...', match: 0.98 },
+  { id: 102, title: '福州地貌', chapter: '地理卷 · 福建自然地理', snippet: '福州盆地处于闽江下游，四周山岛环抱，具有典型的盆地特征。境内地势西北高、东南低...', match: 0.85 },
+  { id: 103, title: '闽南语', chapter: '语言卷 · 闽台方言', snippet: '闽南语，又称河洛话，是汉语七大方言之一。主要分布在福建南部、台湾大部分地区...', match: 0.82 },
+  { id: 104, title: '妈祖信仰', chapter: '海洋文化卷 · 信仰', snippet: '妈祖信仰起源于宋代福建莆田湄洲岛，是闽台两地最重要的民间信仰之一。妈祖被尊为...', match: 0.79 },
+];
+
+const ARTICLE_CONTENT = {
+  title: { simp: '妈祖文化', trad: '媽祖文化' },
+  chapter: { simp: '海洋文化卷 · 信仰', trad: '海洋文化卷 · 信仰' },
+  imageCaption: { simp: '湄洲妈祖祖庙全景 —— 闽台妈祖信仰的发源地', trad: '湄洲媽祖祖廟全景 —— 閩臺媽祖信仰的發源地' },
+  paragraphs: [
+    { simp: '妈祖文化是以妈祖信仰为核心，涵盖祭祀仪典、民间传说、建筑艺术、戏曲文学等多种形态的文化体系。妈祖，原名林默，北宋建隆元年（960年）生于福建莆田湄洲岛，因救助海难而羽化升天，被沿海民众尊为海上保护神。', trad: '媽祖文化是以媽祖信仰為核心，涵蓋祭祀儀典、民間傳說、建築藝術、戲曲文學等多種形態的文化體系。媽祖，原名林默，北宋建隆元年（960年）生於福建莆田湄洲島，因救助海難而羽化升天，被沿海民眾尊為海上保護神。' },
+    { simp: '在闽台两地，妈祖信仰具有深厚的历史根基和广泛的群众基础。据统计，台湾现有妈祖宫庙超过5100座，信众逾1600万人，占台湾人口的三分之二以上。台湾许多地区的妈祖庙与福建祖庙保持着密切的"分灵"关系，定期组团回湄洲祖庙"进香"、"割火"，成为两岸民间交流的重要纽带。', trad: '在閩臺兩地，媽祖信仰具有深厚的歷史根基和廣泛的群眾基礎。據統計，臺灣現有媽祖宮廟超過5100座，信眾逾1600萬人，占臺灣人口的三分之二以上。臺灣許多地區的媽祖廟與福建祖廟保持著密切的「分靈」關係，定期組團回湄洲祖廟「進香」、「割火」，成為兩岸民間交流的重要紐帶。' },
+    { simp: '妈祖文化的核心价值体现在"立德、行善、大爱"的精神内涵。妈祖传说中所蕴含的扶危济困、舍己救人、和平博爱等理念，与中华民族的传统美德高度契合。2009年，"妈祖信俗"被联合国教科文组织列入人类非物质文化遗产代表作名录，成为全人类共同的文化财富。', trad: '媽祖文化的核心價值體現在「立德、行善、大愛」的精神內涵。媽祖傳說中所蘊含的扶危濟困、捨己救人、和平博愛等理念，與中華民族的傳統美德高度契合。2009年，「媽祖信俗」被聯合國教科文組織列入人類非物質文化遺產代表作名錄，成為全人類共同的文化財富。' },
+  ],
+  tags: {
+    simp: ['妈祖信仰', '湄洲岛', '非物质文化遗产', '两岸交流', '民间信仰', '海洋文化'],
+    trad: ['媽祖信仰', '湄洲島', '非物質文化遺產', '兩岸交流', '民間信仰', '海洋文化']
+  }
+};
+
+const KNOWLEDGE_BASE = {
+  '闽南语和台语有什么区别？': {
+    content: '根据《闽台文化大辞典》相关记载，闽南语和台语同属闽南语系。台湾闽南语（台语）主要源自福建泉州和漳州，但在长期的历史发展中，台语吸收了部分平埔族语言、日语及外来语词汇，在语音和部分特色词汇上与福建本土闽南语产生了细微差异，但两者核心词汇与语法一致，依然完全互通。',
+    source: '语言卷 · 闽台方言'
+  },
+  '介绍一下两岸共同的元宵习俗': {
+    content: '《闽台文化大辞典》记载，两岸元宵节除了赏花灯、猜灯谜、吃汤圆等共同习俗外，在闽台地区还有独特的"钻灯脚"（寓意祈求生子）以及盛大的"迎神赛会"。例如台湾的"盐水蜂炮"、"平溪天灯"与福建本土的"游神"、"踩街"活动，同根同源，都是元宵期间重要的民俗狂欢。',
+    source: '民俗卷 · 传统节日'
+  },
+  '妈祖文化在闽台两地是如何传承的？': {
+    content: '根据《闽台文化大辞典》相关记载，妈祖文化在两地的传承主要体现在：\n\n1. 祭祀仪典：湄洲祖庙与台湾各大妈祖庙保持着密切的"分灵"关系。\n2. 民俗活动：包含盛大的绕境巡安、进香祈福等。\n3. 文化认同：妈祖作为"海上女神"，是两岸民众的共同保护神，成为深厚的情感连接纽带。',
+    source: '海洋文化卷 · 信仰'
+  },
+  '什么是闽台文化？': {
+    content: '闽台文化是指以福建和台湾为核心区域，在历史长河中形成的具有共同渊源、密切联系的地域文化体系。它涵盖语言、民俗、宗教、建筑、饮食、艺术等多个层面，体现了中原文化南传后与闽越土著文化、海洋文化融合发展的历史轨迹。',
+    source: '总论'
+  },
+  '介绍一下福建土楼': {
+    content: '福建土楼是闽西地区独特的民居建筑形式，以永定土楼和南靖土楼最为著名。土楼多为圆形或方形，采用夯土技术建造，具有防御功能强、聚族而居的特点，体现了客家人团结互助、崇文重教的文化传统。2008年，福建土楼被列入世界文化遗产名录。',
+    source: '建筑卷 · 民居'
+  }
+};
+
+const SUGGESTIONS = [
+  '闽南语和台语有什么区别？',
+  '介绍一下两岸共同的元宵习俗',
+  '妈祖文化在闽台两地是如何传承的？',
+  '什么是闽台文化？',
+  '介绍一下福建土楼'
+];
+
+// ==================== 工具函数 ====================
+
+/**
+ * 安全的文本高亮函数 - 修复原始代码中的逻辑问题
+ * 1. 转义正则特殊字符，避免搜索"福州."等时出错
+ * 2. 使用正则全局匹配，支持多次高亮
+ * 3. 空字符串保护
+ */
+function renderHighlightedText(text, highlightStr) {
+  if (!highlightStr || !text) return text;
+  // 转义正则特殊字符
+  const escaped = highlightStr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`(${escaped})`, 'gi');
+  const parts = text.split(regex);
+  return parts.map((part, i) => {
+    const isMatch = part.toLowerCase() === highlightStr.toLowerCase();
+    return isMatch ? (
+      <span key={i} className="highlight-match">{part}</span>
+    ) : (
+      <span key={i}>{part}</span>
+    );
+  });
+}
+
+/**
+ * 模糊匹配知识库 - 修复原始代码只能精确匹配的问题
+ */
+function findBestAnswer(query) {
+  if (!query.trim()) return null;
+  const q = query.trim();
+
+  // 1. 精确匹配
+  if (KNOWLEDGE_BASE[q]) {
+    return { ...KNOWLEDGE_BASE[q], matchType: 'exact' };
+  }
+
+  // 2. 包含匹配
+  for (const [key, value] of Object.entries(KNOWLEDGE_BASE)) {
+    if (key.includes(q) || q.includes(key)) {
+      return { ...value, matchType: 'partial' };
+    }
+  }
+
+  // 3. 关键词匹配
+  const keywords = q.split(/\s+/);
+  for (const [key, value] of Object.entries(KNOWLEDGE_BASE)) {
+    const matchCount = keywords.filter(kw => key.includes(kw)).length;
+    if (matchCount >= Math.max(1, keywords.length * 0.5)) {
+      return { ...value, matchType: 'keyword' };
+    }
+  }
+
+  return null;
+}
+
+/**
+ * 生成唯一ID - 修复原始代码中Date.now()可能重复的问题
+ */
+let idCounter = 0;
+function generateId() {
+  return `msg_${Date.now()}_${++idCounter}`;
+}
+
+// ==================== 子组件 ====================
+
+/**
+ * 音频播放按钮组件 - 修复原始代码仅有UI状态的问题
+ * 实际调用Web Speech API进行语音朗读
+ */
+function AudioPlayer({ isPlaying, onToggle, lang, onLangChange, isTraditional, voiceReady }) {
+  const [currentTime, setCurrentTime] = useState(0);
+  const [voiceInfo, setVoiceInfo] = useState('');
+  const intervalRef = useRef(null);
+
+  // 检测当前可用的 zh-TW 语音
+  useEffect(() => {
+    if (!('speechSynthesis' in window)) {
+      setVoiceInfo(isTraditional ? '不支援語音' : '不支持语音');
+      return;
+    }
+    const checkVoices = () => {
+      const voices = window.speechSynthesis.getVoices();
+      const twVoice = voices.find(v => v.lang === 'zh-TW');
+      if (twVoice) {
+        setVoiceInfo(twVoice.name.split(' ').pop() || 'zh-TW');
+      } else {
+        const zhVoice = voices.find(v => v.lang.startsWith('zh'));
+        setVoiceInfo(zhVoice ? (isTraditional ? '中文語音' : '中文语音') : (isTraditional ? '無語音引擎' : '无语音引擎'));
+      }
+    };
+    checkVoices();
+    window.speechSynthesis.onvoiceschanged = checkVoices;
+  }, [isTraditional, lang]);
+
+  useEffect(() => {
+    if (isPlaying) {
+      intervalRef.current = setInterval(() => {
+        setCurrentTime(t => t + 1);
+      }, 1000);
+    } else {
+      setCurrentTime(0);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    }
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [isPlaying]);
+
+  const formatTime = (s) => {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${m}:${sec.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center space-x-3">
+        <button
+          onClick={onToggle}
+          className="w-11 h-11 bg-[#B91C1C] text-white rounded-full flex items-center justify-center shadow-md btn-press"
+          aria-label={isPlaying ? '暂停朗读' : '开始朗读'}
+        >
+          {isPlaying ? (
+            <div className="flex items-center space-x-0.5">
+              <div className="w-1 h-4 bg-white rounded-full sound-bar" />
+              <div className="w-1 h-4 bg-white rounded-full sound-bar" />
+              <div className="w-1 h-4 bg-white rounded-full sound-bar" />
+            </div>
+          ) : (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style={{marginLeft:'2px'}}>
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+          )}
+        </button>
+        <div>
+          <div className="flex items-center space-x-2">
+            <span className="text-xs font-bold text-gray-700">
+              {isPlaying ? (isTraditional ? '正在朗讀' : '正在朗读') : (isTraditional ? '點擊朗讀' : '点击朗读')}
+            </span>
+            <select
+              className="text-[10px] bg-slate-100 px-2 py-0.5 rounded outline-none border-r-4 border-transparent text-gray-600"
+              value={lang}
+              onChange={(e) => onLangChange(e.target.value)}
+            >
+              <option value="mandarin">{isTraditional ? '普通話' : '普通话'}</option>
+              <option value="minnan">{isTraditional ? '閩南語' : '闽南语'}</option>
+            </select>
+          </div>
+          <p className="text-[10px] text-gray-400 mt-0.5">
+            {isPlaying ? formatTime(currentTime) : (lang === 'minnan' ? `zh-TW · ${voiceInfo}` : `zh-CN · ${voiceInfo}`)}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * 底部导航栏组件
+ */
+function BottomNav({ activeTab, onTabChange, hidden }) {
+  if (hidden) return null;
+
+  const tabs = [
+    { tab: 'home', label: '辞典目录', labelTrad: '辭典目錄' },
+    { tab: 'ai', label: 'AI 问答', labelTrad: 'AI 問答' },
+    { tab: 'profile', label: '我的权益', labelTrad: '我的權益' },
+  ];
+
+  const icons = {
+    home: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+      </svg>
+    ),
+    ai: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+    ),
+    profile: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+    ),
+  };
+
+  return (
+    <div className="h-16 bg-white/95 backdrop-blur-md border-t border-slate-100 flex items-center justify-around pb-2 z-50">
+      {tabs.map(item => {
+        const isActive = activeTab === item.tab;
+        return (
+          <button
+            key={item.tab}
+            onClick={() => onTabChange(item.tab)}
+            className={`flex flex-col items-center space-y-1 px-4 py-1 rounded-xl transition-all duration-300 ${
+              isActive ? 'text-[#B91C1C] nav-item-active' : 'text-gray-400 hover:text-gray-500'
+            }`}
+          >
+            <span className="nav-icon">{icons[item.tab]}</span>
+            <span className="text-[10px] font-bold tracking-wide">{item.label}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// ==================== 主应用组件 ====================
 
 const App = () => {
   const [activeTab, setActiveTab] = useState('home');
@@ -29,266 +447,514 @@ const App = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const [currentArticleIndex, setCurrentArticleIndex] = useState(0);
 
   const chatEndRef = useRef(null);
+  const searchInputRef = useRef(null);
   const [chatInput, setChatInput] = useState('');
   const [chatHistory, setChatHistory] = useState([
     {
-      id: 1,
+      id: generateId(),
       role: 'ai',
       type: 'welcome',
       content: '您好！我是您的闽台文化小助手。有什么我可以帮您的吗？您可以问我：',
-      suggestions: [
-        '闽南语和台语有什么区别？',
-        '介绍一下两岸共同的元宵习俗',
-        '妈祖文化在闽台两地是如何传承的？'
-      ]
+      suggestions: SUGGESTIONS.slice(0, 3)
     }
   ]);
+  const [isAiTyping, setIsAiTyping] = useState(false);
 
-  const categories = [
-    { id: 1, title: '地理卷', sub: '福建自然地理、台湾自然地理...' },
-    { id: 2, title: '历史卷', sub: '古代史、近现代史、重要事件...' },
-    { id: 3, title: '民族与宗族卷', sub: '姓氏源流、移民迁岙、族谱...' },
-    { id: 4, title: '海洋文化卷', sub: '海上丝绸之路、妈祖信仰、造船...' },
-  ];
+  const langKey = isTraditional ? 'trad' : 'simp';
+  const textSizeClass = fontSize === 'large' ? 'text-lg leading-loose' : 'text-base leading-relaxed';
 
-  const searchResults = [
-    { id: 101, title: '福州府', chapter: '地理卷 · 福建历史地理', snippet: '福州府，闽县附郭。东至海，西至延平府古田县界...', match: 0.98 },
-    { id: 102, title: '福州地貌', chapter: '地理卷 · 福建自然地理', snippet: '福州盆地处于闽江下游，四周山島环抱，具有典型的盆地特征...', match: 0.85 },
-  ];
+  // ==================== 语音朗读功能 ====================
+  const [voiceReady, setVoiceReady] = useState(false);
 
-  const articleContent = {
-    title: { simp: '妈祖文化', trad: '媽祖文化' },
-    chapter: { simp: '海洋文化卷 · 信仰', trad: '海洋文化卷 · 信仰' },
-    imageCaption: { simp: '图1：早期妈祖祭典图示（选自《闽台历史图鉴》）', trad: '圖1：早期媽祖祭典圖示（選自《閩台歷史圖鑑》）' },
-    paragraphs: [
-      {
-        simp: '妈祖是流传于中国沿海地区的民间信仰。妈祖文化作为闽台文化的重要组成部分，深深扎根于两岸民众的生活中。据记载，妈祖原名林默，宋代福建莆田湄洲岛人。她一生行善积德，救助海难，被尊为"海上女神"。',
-        trad: '媽祖是流傳於中國沿海地區的民間信仰。媽祖文化作為閩台文化的重要組成部分，深深紮根於兩岸民眾的生活中。據記載，媽祖原名林默，宋代福建莆田湄洲島人。她一生行善積德，救助海難，被尊為「海上女神」。'
-      },
-      {
-        simp: '在台湾，妈祖信仰极为普遍，大大小小的妈祖庙遍布各市镇乡村。每年的"妈祖绕境"活动更是规模宏大，被誉为全球三大宗教盛事之一。两岸妈祖文化同根同源，近年来，台湾数百家宫庙的信众多次赴湄洲岛谒祖进香，成为闽台文化交流的重要纽带。',
-        trad: '在台灣，媽祖信仰極為普遍，大大小小的媽祖廟遍佈各市鎮鄉村。每年的「媽祖繞境」活動更是規模宏大，被譽為全球三大宗教盛事之一。兩岸媽祖文化同根同源，近年來，台灣數百家宮廟的信眾多次赴湄洲島謁祖進香，成為閩台文化交流的重要紐帶。'
+  // 预加载语音列表
+  useEffect(() => {
+    if (!('speechSynthesis' in window)) return;
+    const loadVoices = () => {
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length > 0) setVoiceReady(true);
+    };
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = () => {
+      loadVoices();
+      setVoiceReady(true);
+    };
+  }, []);
+
+  // 根据语言选择最佳语音
+  const getBestVoice = useCallback((lang) => {
+    if (!('speechSynthesis' in window)) return null;
+    const voices = window.speechSynthesis.getVoices();
+    if (voices.length === 0) return null;
+
+    const targetLang = lang === 'minnan' ? 'zh-TW' : 'zh-CN';
+
+    // 1. 精确匹配语言标签
+    const exactMatch = voices.find(v => v.lang === targetLang);
+    if (exactMatch) return exactMatch;
+
+    // 2. 前缀匹配 (zh-TW, zh-Hant 等)
+    const prefix = targetLang.split('-')[0];
+    const subtag = targetLang.split('-')[1];
+    const prefixMatch = voices.find(v => {
+      const vParts = v.lang.split('-');
+      return vParts[0] === prefix && vParts[1] && vParts[1].startsWith(subtag);
+    });
+    if (prefixMatch) return prefixMatch;
+
+    // 3. 同语系匹配 (zh-* 系列)
+    const familyMatch = voices.find(v => v.lang.startsWith(prefix));
+    if (familyMatch) return familyMatch;
+
+    return null;
+  }, []);
+
+  const toggleAudio = useCallback(() => {
+    if ('speechSynthesis' in window) {
+      if (isPlaying) {
+        window.speechSynthesis.cancel();
+        setIsPlaying(false);
+      } else {
+        const text = ARTICLE_CONTENT.paragraphs.map(p => p[langKey]).join('\n');
+        const utterance = new SpeechSynthesisUtterance(text);
+        const targetLang = audioLang === 'minnan' ? 'zh-TW' : 'zh-CN';
+        utterance.lang = targetLang;
+        utterance.rate = audioLang === 'minnan' ? 0.85 : 1.0;
+
+        // 尝试指定具体语音引擎
+        const voice = getBestVoice(audioLang);
+        if (voice) {
+          utterance.voice = voice;
+        }
+
+        utterance.onend = () => setIsPlaying(false);
+        utterance.onerror = () => setIsPlaying(false);
+        window.speechSynthesis.speak(utterance);
+        setIsPlaying(true);
       }
-    ],
-    tags: { simp: ['民俗', '信仰', '海洋文化'], trad: ['民俗', '信仰', '海洋文化'] }
-  };
-
-  const knowledgeBase = {
-    '闽南语和台语有什么区别？': {
-      content: '根据《闽台文化大辞典》相关记载，闽南语和台语同属闽南语系。台湾闽南语（台语）主要源自福建泉州和漳州，但在长期的历史发展中，台语吸收了部分平埔族语言、日语及外来语词汇，在语音和部分特色词汇上与福建本土闽南语产生了细微差异，但两者核心词汇与语法一致，依然完全互通。',
-      source: '语言卷 · 闽台方言'
-    },
-    '介绍一下两岸共同的元宵习俗': {
-      content: '《闽台文化大辞典》记载，两岸元宵节除了赏花灯、猜灯谜、吃汤圆等共同习俗外，在闽台地区还有独特的"钻灯脚"（寓意祈求生子）以及盛大的"迎神赛会"。例如台湾的"盐水蜂炮"、"平溪天灯"与福建本土的"游神"、"踩街"活动，同根同源，都是元宵期间重要的民俗狂欢。',
-      source: '民俗卷 · 传统节日'
-    },
-    '妈祖文化在闽台两地是如何传承的？': {
-      content: '根据《闽台文化大辞典》相关记载，妈祖文化在两地的传承主要体现在：\n\n1. 祭祀仪典：湄洲祖庙与台湾各大妈祖庙保持着密切的"分灵"关系。\n2. 民俗活动：包含盛大的绕境巡安、进香祈福等。\n3. 文化认同：妈祖作为"海上女神"，是两岸民众的共同保护神，成为深厚的情感连接纽带。',
-      source: '海洋文化卷 · 信仰'
+    } else {
+      alert('您的浏览器不支持语音朗读功能');
     }
+  }, [isPlaying, langKey, audioLang, getBestVoice]);
+
+  // 切换页面时停止朗读
+  useEffect(() => {
+    if (activeTab !== 'reader' && isPlaying) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      setIsPlaying(false);
+    }
+  }, [activeTab]);
+
+  // ==================== 搜索功能 ====================
+  const handleSearchFocus = () => {
+    setIsSearching(true);
+    setTimeout(() => searchInputRef.current?.focus(), 100);
   };
 
-  const renderHighlightedText = (text, highlightStr) => {
-    if (!highlightStr) return text;
-    const parts = text.split(highlightStr);
-    return parts.map((part, i) => (
-      <span key={i}>
-        {part}
-        {i !== parts.length - 1 && <span style={{background:'#fef08a', color:'#111827', padding:'0 2px', borderRadius:'3px', fontWeight:'500'}}>{highlightStr}</span>}
-      </span>
-    ));
+  const handleSearchBack = () => {
+    setIsSearching(false);
+    setSearchQuery('');
   };
 
-  const handleSendQuestion = (text) => {
+  const filteredResults = searchQuery.trim()
+    ? SEARCH_RESULTS.filter(r =>
+        r.title.includes(searchQuery) ||
+        r.snippet.includes(searchQuery) ||
+        r.chapter.includes(searchQuery)
+      )
+    : SEARCH_RESULTS;
+
+  // ==================== AI问答功能 ====================
+  const handleSendQuestion = useCallback((text) => {
     if (!text.trim()) return;
-    const newUserMsg = { id: Date.now(), role: 'user', content: text };
-    setChatHistory(prev => [...prev, newUserMsg]);
+    const userMsg = { id: generateId(), role: 'user', content: text.trim() };
+    setChatHistory(prev => [...prev, userMsg]);
     setChatInput('');
+    setIsAiTyping(true);
+
     setTimeout(() => {
-      const answer = knowledgeBase[text] || {
-        content: '关于这个问题，《闽台文化大辞典》中暂时没有直接对应的词条记载。您可以尝试提问上方示例中的问题。',
-        source: '智能检索引擎'
-      };
-      const newAiMsg = { id: Date.now() + 1, role: 'ai', type: 'answer', ...answer };
-      setChatHistory(prev => [...prev, newAiMsg]);
-    }, 600);
-  };
+      const answer = findBestAnswer(text.trim());
+      setIsAiTyping(false);
+      if (answer) {
+        const aiMsg = {
+          id: generateId(),
+          role: 'ai',
+          type: 'answer',
+          content: answer.content,
+          source: answer.source,
+          matchType: answer.matchType
+        };
+        setChatHistory(prev => [...prev, aiMsg]);
+      } else {
+        const aiMsg = {
+          id: generateId(),
+          role: 'ai',
+          type: 'answer',
+          content: `关于"${text.trim()}"，《闽台文化大辞典》中暂时没有直接对应的词条记载。您可以尝试以下方式：\n\n1. 使用更简短的关键词搜索\n2. 尝试提问上方示例中的问题\n3. 浏览卷目目录查找相关内容`,
+          source: '智能检索引擎',
+          matchType: 'none'
+        };
+        setChatHistory(prev => [...prev, aiMsg]);
+      }
+    }, 800 + Math.random() * 400);
+  }, []);
 
   useEffect(() => {
     if (activeTab === 'ai' && chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [chatHistory, activeTab]);
+  }, [chatHistory, activeTab, isAiTyping]);
 
-  const langKey = isTraditional ? 'trad' : 'simp';
-  const textSizeClass = fontSize === 'large' ? 'text-lg leading-loose' : 'text-base leading-relaxed';
+  // ==================== 阅读器导航 ====================
+  const handlePrevArticle = () => {
+    setCurrentArticleIndex(prev => Math.max(0, prev - 1));
+  };
+
+  const handleNextArticle = () => {
+    setCurrentArticleIndex(prev => prev + 1);
+  };
+
+  // ==================== 渲染函数 ====================
 
   const renderHome = () => (
     <div className="flex flex-col h-full bg-slate-50">
-      <div className="bg-[#B91C1C] text-white p-6 pt-12 rounded-b-3xl shadow-lg relative">
-        <h1 className="text-2xl font-bold mb-2">闽台文化大辞典</h1>
-        <p className="text-red-100 text-sm opacity-80 italic">数字化阅读与检索平台</p>
-        <div className="mt-6 flex bg-white rounded-full px-4 py-3 items-center shadow-inner">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 shrink-0"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input type="text" placeholder="搜词条、搜历史、搜民俗..." className="bg-transparent border-none outline-none text-gray-800 placeholder:text-gray-400 w-full text-sm" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onFocus={() => setIsSearching(true)} />
-          {searchQuery && (
-            <button onClick={() => setSearchQuery('')} className="shrink-0">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
-          )}
+      {/* 顶部红色区域 */}
+      <div className="bg-[#B91C1C] text-white p-6 pt-12 rounded-b-[28px] shadow-lg relative overflow-hidden">
+        {/* 装饰性背景元素 */}
+        <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-10 -mt-10 blur-2xl" />
+        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -ml-8 -mb-8 blur-xl" />
+
+        <div className="relative z-10">
+          <h1 className="text-2xl font-bold mb-2 font-serif-sc tracking-wide">闽台文化大辞典</h1>
+          <p className="text-red-100 text-sm opacity-80 italic font-light">数字化阅读与检索平台</p>
+
+          {/* 搜索框 */}
+          <div className="mt-6 flex bg-white rounded-full px-4 py-3 items-center shadow-inner search-focus">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 shrink-0">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input
+              type="text"
+              placeholder="搜词条、搜历史、搜民俗..."
+              className="bg-transparent border-none outline-none text-gray-800 placeholder:text-gray-400 w-full text-sm"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={handleSearchFocus}
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')} className="shrink-0 p-1 rounded-full hover:bg-slate-100 transition-colors">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18"/>
+                  <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            )}
+          </div>
         </div>
       </div>
+
+      {/* 卷目导航 */}
       <div className="flex-1 overflow-y-auto px-4 py-6">
-        <h2 className="text-gray-800 font-bold border-l-4 border-[#B91C1C] pl-2 mb-4">卷目导航</h2>
+        <h2 className="text-gray-800 font-bold border-l-4 border-[#B91C1C] pl-3 mb-5 text-base">
+          卷目导航
+        </h2>
         <div className="space-y-3">
-          {categories.map((item) => (
-            <div key={item.id} className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between cursor-pointer active:bg-slate-50" onClick={() => setActiveTab('reader')}>
+          {CATEGORIES.map((item, index) => (
+            <div
+              key={item.id}
+              className={`bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between cursor-pointer card-hover stagger-${index + 1}`}
+              onClick={() => setActiveTab('reader')}
+            >
               <div className="flex items-center space-x-4">
-                <div className="w-10 h-10 bg-red-50 text-[#B91C1C] rounded-lg flex items-center justify-center font-bold">{item.title[0]}</div>
+                <div
+                  className="w-11 h-11 rounded-xl flex items-center justify-center font-bold text-base shadow-sm"
+                  style={{ backgroundColor: item.color + '15', color: item.color }}
+                >
+                  {item.icon}
+                </div>
                 <div>
-                  <h3 className="text-gray-800 font-semibold">{item.title}</h3>
-                  <p className="text-xs text-gray-400 truncate w-48">{item.sub}</p>
+                  <h3 className="text-gray-800 font-semibold text-[15px]">{item.title}</h3>
+                  <p className="text-xs text-gray-400 mt-0.5 truncate w-44">{item.sub}</p>
                 </div>
               </div>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
             </div>
           ))}
+        </div>
+
+        {/* 底部装饰 */}
+        <div className="mt-8 text-center">
+          <p className="text-[11px] text-gray-300">— 共收录 6 卷 · 逾 10 万词条 —</p>
         </div>
       </div>
     </div>
   );
 
   const renderSearchResults = () => (
-    <div className="flex flex-col h-full bg-white">
-      <div className="p-4 pt-12 border-b flex items-center space-x-3">
-        <button onClick={() => {setIsSearching(false); setSearchQuery('');}} className="p-1 -ml-1">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>
+    <div className="flex flex-col h-full bg-white animate-fade-in">
+      {/* 搜索头部 */}
+      <div className="p-4 pt-12 border-b border-slate-100 flex items-center space-x-3 bg-white/95 backdrop-blur-sm sticky top-0 z-10">
+        <button
+          onClick={handleSearchBack}
+          className="p-2 -ml-2 rounded-full hover:bg-slate-100 transition-colors"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m15 18-6-6 6-6"/>
+          </svg>
         </button>
-        <div className="flex-1 bg-slate-100 rounded-full px-4 py-1.5 flex items-center">
-          <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="bg-transparent w-full text-sm outline-none" autoFocus />
+        <div className="flex-1 bg-slate-100 rounded-full px-4 py-2 flex items-center search-focus">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" className="mr-2 shrink-0">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input
+            ref={searchInputRef}
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="bg-transparent w-full text-sm outline-none"
+            autoFocus
+            placeholder="输入关键词搜索..."
+          />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery('')} className="shrink-0">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          )}
         </div>
       </div>
+
+      {/* 搜索结果 */}
       <div className="flex-1 overflow-y-auto p-4">
         <div className="flex justify-between items-center mb-4 px-1">
-          <span className="text-xs text-gray-500">找到 {searchResults.length} 个相关词条</span>
+          <span className="text-xs text-gray-500">
+            找到 <span className="font-bold text-gray-700">{filteredResults.length}</span> 个相关词条
+          </span>
           <span className="text-xs text-indigo-600 font-medium">按匹配度排序</span>
         </div>
-        <div className="space-y-4">
-          {searchResults.map((res) => (
-            <div key={res.id} className="p-4 border border-slate-100 rounded-xl active:bg-slate-50 cursor-pointer" onClick={() => {setIsSearching(false); setActiveTab('reader');}}>
-              <div className="flex justify-between items-start mb-1">
-                <h3 className="font-bold text-[#B91C1C]">{renderHighlightedText(res.title, searchQuery || '福州')}</h3>
-                <span className="text-[10px] bg-slate-100 text-gray-500 px-2 py-0.5 rounded">{res.chapter}</span>
+
+        {filteredResults.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="mb-3">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+            <p className="text-sm">未找到相关词条</p>
+            <p className="text-xs mt-1">请尝试其他关键词</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {filteredResults.map((res, idx) => (
+              <div
+                key={res.id}
+                className={`p-4 border border-slate-100 rounded-2xl card-hover cursor-pointer stagger-${idx + 1}`}
+                onClick={() => {setIsSearching(false); setActiveTab('reader');}}
+              >
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-bold text-[#B91C1C] text-[15px]">
+                    {renderHighlightedText(res.title, searchQuery)}
+                  </h3>
+                  <span className="text-[10px] bg-slate-100 text-gray-500 px-2 py-0.5 rounded-full shrink-0 ml-2">
+                    {res.chapter}
+                  </span>
+                </div>
+                <p className="text-xs text-gray-600 leading-relaxed">
+                  {renderHighlightedText(res.snippet, searchQuery)}
+                </p>
+                <div className="mt-2 flex items-center">
+                  <div className="flex-1 h-1 bg-slate-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-[#B91C1C] rounded-full transition-all duration-500"
+                      style={{ width: `${res.match * 100}%` }}
+                    />
+                  </div>
+                  <span className="text-[10px] text-gray-400 ml-2">{Math.round(res.match * 100)}%</span>
+                </div>
               </div>
-              <p className="text-xs text-gray-600 leading-relaxed mt-2">{renderHighlightedText(res.snippet, searchQuery || '福州')}</p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 
   const renderReader = () => (
-    <div className="flex flex-col h-full bg-white">
-      <div className="flex items-center justify-between p-4 pt-12 border-b">
-        <button onClick={() => setActiveTab('home')} className="p-2 -ml-2">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>
+    <div className="flex flex-col h-full bg-white animate-fade-in">
+      {/* 顶部工具栏 */}
+      <div className="flex items-center justify-between p-4 pt-12 border-b border-slate-100 bg-white/95 backdrop-blur-sm sticky top-0 z-10">
+        <button
+          onClick={() => setActiveTab('home')}
+          className="p-2 -ml-2 rounded-full hover:bg-slate-100 transition-colors"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m15 18-6-6 6-6"/>
+          </svg>
         </button>
         <div className="flex space-x-2">
-          <button onClick={() => setFontSize(fontSize === 'large' ? 'medium' : 'large')} className="px-2.5 py-1 text-xs border border-gray-200 rounded text-gray-600 font-medium active:bg-slate-50">A+</button>
-          <button onClick={() => setIsTraditional(!isTraditional)} className={`px-2.5 py-1 text-xs border rounded font-medium transition-colors ${isTraditional ? 'bg-[#B91C1C] text-white border-[#B91C1C]' : 'border-gray-200 text-gray-600 active:bg-slate-50'}`}> {isTraditional ? '繁体' : '繁体'} </button>
+          {/* 字体大小切换 */}
+          <button
+            onClick={() => setFontSize(fontSize === 'large' ? 'medium' : 'large')}
+            className={`px-3 py-1.5 text-xs border rounded-lg font-medium transition-all ${
+              fontSize === 'large'
+                ? 'bg-[#B91C1C] text-white border-[#B91C1C]'
+                : 'border-gray-200 text-gray-600 hover:bg-slate-50'
+            }`}
+          >
+            {fontSize === 'large' ? 'A-' : 'A+'}
+          </button>
+          {/* 繁简切换 - 修复：显示当前状态 */}
+          <button
+            onClick={() => setIsTraditional(!isTraditional)}
+            className={`px-3 py-1.5 text-xs border rounded-lg font-medium transition-all ${
+              isTraditional
+                ? 'bg-[#B91C1C] text-white border-[#B91C1C]'
+                : 'border-gray-200 text-gray-600 hover:bg-slate-50'
+            }`}
+          >
+            {isTraditional ? '繁' : '简'}
+          </button>
         </div>
       </div>
+
+      {/* 文章内容 */}
       <div className="flex-1 overflow-y-auto">
         <div className="p-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">{articleContent.title[langKey]}</h2>
-          <p className="text-xs text-[#B91C1C] mb-6">{articleContent.chapter[langKey]}</p>
-          <div className="mb-6 rounded-lg overflow-hidden border border-slate-100 bg-slate-50">
-            <div className="aspect-video flex flex-col items-center justify-center text-gray-300">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2 font-serif-sc">
+            {ARTICLE_CONTENT.title[langKey]}
+          </h2>
+          <p className="text-xs text-[#B91C1C] mb-6 font-medium">
+            {ARTICLE_CONTENT.chapter[langKey]}
+          </p>
+
+          {/* 图片占位 */}
+          <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 img-placeholder">
+            <div className="aspect-video flex flex-col items-center justify-center text-gray-400">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
               <span className="text-xs mt-2">辞典历史影像资源加载中...</span>
             </div>
-            <div className="p-2 text-center border-t border-slate-100 bg-white">
-              <p className="text-[11px] text-gray-500">{articleContent.imageCaption[langKey]}</p>
+            <div className="p-3 text-center border-t border-slate-100 bg-white">
+              <p className="text-[11px] text-gray-500">{ARTICLE_CONTENT.imageCaption[langKey]}</p>
             </div>
           </div>
-          <div className={`text-gray-800 space-y-4 ${textSizeClass} text-justify`}>
-            {articleContent.paragraphs.map((p, index) => (
+
+          {/* 正文 */}
+          <div className={`text-gray-800 space-y-5 ${textSizeClass} text-justify font-serif-sc`}>
+            {ARTICLE_CONTENT.paragraphs.map((p, index) => (
               <p key={index} className="indent-8">{p[langKey]}</p>
             ))}
           </div>
+
+          {/* 标签 */}
           <div className="mt-8 pt-6 border-t border-slate-100 flex flex-wrap gap-2">
-            {articleContent.tags[langKey].map(tag => (
-              <span key={tag} className="px-3 py-1 bg-slate-50 border border-slate-100 text-slate-500 text-xs rounded-full">#{tag}</span>
+            {ARTICLE_CONTENT.tags[langKey].map(tag => (
+              <span
+                key={tag}
+                className="px-3 py-1.5 bg-slate-50 border border-slate-100 text-slate-500 text-xs rounded-full tag-pill cursor-pointer"
+              >
+                #{tag}
+              </span>
             ))}
           </div>
         </div>
       </div>
-      <div className="bg-white border-t px-4 py-3 pb-8 space-y-3 shadow-[0_-4px_15px_rgba(0,0,0,0.03)]">
+
+      {/* 底部操作栏 */}
+      <div className="bg-white border-t border-slate-100 px-4 py-3 pb-8 space-y-3 shadow-[0_-4px_15px_rgba(0,0,0,0.03)]">
+        {/* 上一篇/下一篇 */}
         <div className="flex items-center justify-between border-b border-slate-50 pb-3">
-          <button className="flex items-center text-sm text-gray-500 active:text-[#B91C1C]">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-0.5"><polyline points="15 18 9 12 15 6"/></svg>
-            {isTraditional ? '上一词條' : '上一词条'}
+          <button
+            onClick={handlePrevArticle}
+            disabled={currentArticleIndex <= 0}
+            className={`flex items-center text-sm transition-colors ${
+              currentArticleIndex > 0 ? 'text-gray-500 hover:text-[#B91C1C]' : 'text-gray-300 cursor-not-allowed'
+            }`}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-0.5">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+            {isTraditional ? '上一詞條' : '上一词条'}
           </button>
-          <button className="flex items-center text-sm text-gray-500 active:text-[#B91C1C]">
-            {isTraditional ? '下一词條' : '下一词条'}
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="ml-0.5"><polyline points="9 18 15 12 9 6"/></svg>
+          <button
+            onClick={handleNextArticle}
+            className="flex items-center text-sm text-gray-500 hover:text-[#B91C1C] transition-colors"
+          >
+            {isTraditional ? '下一詞條' : '下一词条'}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="ml-0.5">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
           </button>
         </div>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <button onClick={() => setIsPlaying(!isPlaying)} className="w-10 h-10 bg-[#B91C1C] text-white rounded-full flex items-center justify-center shadow-md active:scale-95 transition-transform">
-              {isPlaying ? (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-              ) : (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style={{marginLeft:'2px'}}><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              )}
-            </button>
-            <div>
-              <div className="flex items-center space-x-2">
-                <span className="text-xs font-bold text-gray-700">{isTraditional ? '正在朗读' : '正在朗读'}</span>
-                <select className="text-[10px] bg-slate-100 px-1 py-0.5 rounded outline-none border-r-4 border-transparent text-gray-600" value={audioLang} onChange={(e) => setAudioLang(e.target.value)}>
-                  <option value="mandarin">{isTraditional ? '普通话' : '普通话'}</option>
-                  <option value="minnan">{isTraditional ? '闽南语' : '闽南语'}</option>
-                </select>
-              </div>
-              <p className="text-[10px] text-gray-400 mt-0.5">{isTraditional ? '语速' : '语速'} 1.0x</p>
-            </div>
-          </div>
-        </div>
+
+        {/* 音频播放器 */}
+        <AudioPlayer
+          isPlaying={isPlaying}
+          onToggle={toggleAudio}
+          lang={audioLang}
+          onLangChange={setAudioLang}
+          isTraditional={isTraditional}
+          voiceReady={voiceReady}
+        />
       </div>
     </div>
   );
 
   const renderAI = () => (
     <div className="flex flex-col h-full bg-[#F8FAFC]">
-      <div className="bg-white border-b p-4 pt-12 text-center shadow-sm relative z-10">
+      {/* AI助手头部 */}
+      <div className="bg-white border-b border-slate-100 p-4 pt-12 text-center shadow-sm relative z-10">
         <div className="flex justify-center items-center space-x-2">
-          <div className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center text-white">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <div className="w-9 h-9 bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-full flex items-center justify-center text-white shadow-md">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
           </div>
-          <h2 className="font-bold text-gray-800">文化知识助手</h2>
+          <h2 className="font-bold text-gray-800 text-base">文化知识助手</h2>
         </div>
         <p className="text-[10px] text-gray-400 mt-1">基于《闽台文化大辞典》知识库</p>
       </div>
+
+      {/* 聊天内容 */}
       <div className="flex-1 overflow-y-auto p-4 space-y-5 scroll-smooth">
         <div className="flex justify-center">
-          <span className="bg-slate-200/60 text-slate-500 text-[10px] px-3 py-1 rounded-full">欢迎使用，您可以询问关于闽台文化、历史、民俗的问题</span>
+          <span className="bg-slate-200/60 text-slate-500 text-[10px] px-3 py-1 rounded-full">
+            欢迎使用，您可以询问关于闽台文化、历史、民俗的问题
+          </span>
         </div>
+
         {chatHistory.map((msg) => (
-          <div key={msg.id}>
+          <div key={msg.id} className="msg-bubble">
             {msg.role === 'ai' ? (
               <div className="flex items-start space-x-3 mt-2">
-                <div className="w-8 h-8 bg-indigo-100 rounded-full flex-shrink-0 flex items-center justify-center text-indigo-600 text-xs font-bold">AI</div>
+                <div className="w-8 h-8 bg-indigo-100 rounded-full flex-shrink-0 flex items-center justify-center text-indigo-600 text-xs font-bold shadow-sm">
+                  AI
+                </div>
                 <div className="bg-white p-3.5 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 max-w-[85%]">
                   {msg.type === 'welcome' && (
                     <>
-                      <p className="text-sm text-gray-800">{msg.content}</p>
+                      <p className="text-sm text-gray-800 leading-relaxed">{msg.content}</p>
                       <div className="mt-3 space-y-2">
                         {msg.suggestions.map((sug, idx) => (
-                          <button key={idx} onClick={() => handleSendQuestion(sug)} className="block w-full text-left text-xs text-indigo-600 bg-indigo-50/50 hover:bg-indigo-50 p-2 rounded-lg border border-indigo-100 transition-colors active:scale-[0.98]">"{sug}"</button>
+                          <button
+                            key={idx}
+                            onClick={() => handleSendQuestion(sug)}
+                            className="block w-full text-left text-xs text-indigo-600 bg-indigo-50/50 hover:bg-indigo-50 p-2.5 rounded-xl border border-indigo-100 transition-all active:scale-[0.98]"
+                          >
+                            "{sug}"
+                          </button>
                         ))}
                       </div>
                     </>
@@ -297,8 +963,16 @@ const App = () => {
                     <>
                       <div className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">{msg.content}</div>
                       <div className="mt-3 flex justify-between items-center text-[10px] text-gray-400 border-t border-slate-100 pt-2">
-                        <span>来源：{msg.source}</span>
-                        <button className="text-indigo-600 font-medium active:opacity-70">查看原文</button>
+                        <span className="flex items-center">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-1">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                          </svg>
+                          来源：{msg.source}
+                        </span>
+                        <button className="text-indigo-600 font-medium hover:text-indigo-700 transition-colors">
+                          查看原文
+                        </button>
                       </div>
                     </>
                   )}
@@ -306,7 +980,9 @@ const App = () => {
               </div>
             ) : (
               <div className="flex items-start flex-row-reverse space-x-3 space-x-reverse mt-2">
-                <div className="w-8 h-8 bg-[#B91C1C] rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs font-bold">我</div>
+                <div className="w-8 h-8 bg-[#B91C1C] rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                  我
+                </div>
                 <div className="bg-[#B91C1C] text-white p-3 rounded-2xl rounded-tr-none shadow-sm max-w-[80%]">
                   <p className="text-sm leading-relaxed">{msg.content}</p>
                 </div>
@@ -314,12 +990,49 @@ const App = () => {
             )}
           </div>
         ))}
+
+        {/* AI正在输入指示器 */}
+        {isAiTyping && (
+          <div className="flex items-start space-x-3 mt-2 msg-bubble">
+            <div className="w-8 h-8 bg-indigo-100 rounded-full flex-shrink-0 flex items-center justify-center text-indigo-600 text-xs font-bold shadow-sm">
+              AI
+            </div>
+            <div className="bg-white p-3.5 rounded-2xl rounded-tl-none shadow-sm border border-slate-100">
+              <div className="flex items-center space-x-1">
+                <div className="w-2 h-2 bg-gray-300 rounded-full animate-pulse" />
+                <div className="w-2 h-2 bg-gray-300 rounded-full animate-pulse" style={{animationDelay:'0.2s'}} />
+                <div className="w-2 h-2 bg-gray-300 rounded-full animate-pulse" style={{animationDelay:'0.4s'}} />
+              </div>
+            </div>
+          </div>
+        )}
+
         <div ref={chatEndRef} className="h-1" />
       </div>
-      <div className="bg-white p-4 border-t flex items-center space-x-2 pb-8">
-        <input type="text" value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleSendQuestion(chatInput)} placeholder="输入您想了解的问题..." className="flex-1 bg-slate-100 rounded-full px-4 py-2 text-sm outline-none" />
-        <button onClick={() => handleSendQuestion(chatInput)} className="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center shadow-md active:scale-95 transition-transform shrink-0">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginLeft:'1px'}}><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+
+      {/* 输入框 */}
+      <div className="bg-white p-4 border-t border-slate-100 flex items-center space-x-2 pb-8">
+        <input
+          type="text"
+          value={chatInput}
+          onChange={(e) => setChatInput(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleSendQuestion(chatInput)}
+          placeholder="输入您想了解的问题..."
+          className="flex-1 bg-slate-100 rounded-full px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-100 transition-all"
+        />
+        <button
+          onClick={() => handleSendQuestion(chatInput)}
+          disabled={!chatInput.trim() || isAiTyping}
+          className={`w-10 h-10 rounded-full flex items-center justify-center shadow-md btn-press shrink-0 transition-all ${
+            chatInput.trim() && !isAiTyping
+              ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+          }`}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft:'1px'}}>
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
         </button>
       </div>
     </div>
@@ -327,72 +1040,145 @@ const App = () => {
 
   const renderProfile = () => (
     <div className="flex flex-col h-full bg-slate-50 overflow-y-auto">
+      {/* 用户信息 */}
       <div className="bg-white pt-16 pb-6 px-6">
         <div className="flex items-center space-x-4">
           <div className="w-16 h-16 bg-gradient-to-tr from-slate-200 to-slate-100 rounded-full flex items-center justify-center shadow-inner border border-slate-100">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
           </div>
           <div>
             <h2 className="text-lg font-bold text-gray-800">文化阅读者_9527</h2>
-            <span className="inline-flex items-center mt-1 px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] rounded-full">普通用户</span>
+            <span className="inline-flex items-center mt-1 px-2.5 py-0.5 bg-slate-100 text-slate-500 text-[10px] rounded-full">
+              普通用户
+            </span>
           </div>
         </div>
       </div>
+
+      {/* 会员卡片 */}
       <div className="px-4 -mt-2">
-        <div className="bg-gradient-to-r from-[#2A2A2B] to-[#1A1A1A] rounded-2xl p-5 shadow-lg relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-10 -mt-10 blur-xl"></div>
+        <div className="vip-card bg-gradient-to-r from-[#2A2A2B] to-[#1A1A1A] rounded-2xl p-5 shadow-lg relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-10 -mt-10 blur-xl" />
           <div className="flex justify-between items-start relative z-10">
             <div className="text-[#F2D29E]">
               <div className="flex items-center space-x-2 mb-1">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 19h19l-.5-2.5L17 14l-2.5-6.5L12 11 9.5 7.5 7 14l-4 2.5L2.5 19z"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M2.5 19h19l-.5-2.5L17 14l-2.5-6.5L12 11 9.5 7.5 7 14l-4 2.5L2.5 19z"/>
+                </svg>
                 <h3 className="font-bold text-lg">辞典数字会员</h3>
               </div>
               <p className="text-xs opacity-80">开通会员，解锁辞典全部知识</p>
             </div>
-            <button className="bg-gradient-to-r from-[#EED39A] to-[#D5B06C] text-[#332200] text-xs font-bold px-4 py-2 rounded-full shadow-md active:scale-95 transition-transform">立即开通</button>
+            <button className="bg-gradient-to-r from-[#EED39A] to-[#D5B06C] text-[#332200] text-xs font-bold px-4 py-2 rounded-full shadow-md btn-press">
+              立即开通
+            </button>
           </div>
           <div className="mt-5 grid grid-cols-4 gap-2 text-center text-[#F2D29E]/80 relative z-10">
             {[
-              {icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>, label: '千万字畅读'},
-              {icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>, label: '方言伴读'},
-              {icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, label: 'AI无限问答'},
-              {icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>, label: '纸书联动'}
+              { icon: 'book', label: '千万字畅读' },
+              { icon: 'audio', label: '方言伴读' },
+              { icon: 'chat', label: 'AI无限问答' },
+              { icon: 'link', label: '纸书联动' },
             ].map((item, i) => (
               <div key={i} className="flex flex-col items-center">
-                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center mb-1">{item.icon}</div>
+                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center mb-1">
+                  {item.icon === 'book' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                    </svg>
+                  )}
+                  {item.icon === 'audio' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                  )}
+                  {item.icon === 'chat' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                  )}
+                  {item.icon === 'link' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                    </svg>
+                  )}
+                </div>
                 <span className="text-[10px]">{item.label}</span>
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      {/* 已购纸书验证 */}
       <div className="px-4 mt-4">
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between active:bg-slate-50 cursor-pointer">
+        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between card-hover cursor-pointer">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-red-50 text-[#B91C1C] rounded-full flex items-center justify-center">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+              </svg>
             </div>
             <div>
               <h4 className="text-sm font-bold text-gray-800">已购纸书验证</h4>
               <p className="text-[10px] text-gray-500 mt-0.5">扫描《闽台文化大辞典》防伪码兑换权益</p>
             </div>
           </div>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
         </div>
       </div>
+
+      {/* 功能列表 */}
       <div className="px-4 mt-4 mb-20 space-y-3">
-        <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
           {[
-            {icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, label: '阅读历史'},
-            {icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>, label: '我的订单'},
-            {icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>, label: '设置与帮助'}
+            {
+              icon: (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+              ),
+              label: '阅读历史'
+            },
+            {
+              icon: (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                  <line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+              ),
+              label: '我的订单'
+            },
+            {
+              icon: (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+              ),
+              label: '设置与帮助'
+            }
           ].map((item, i, arr) => (
-            <div key={i} className={`flex items-center justify-between p-4 ${i < arr.length - 1 ? 'border-b border-slate-50' : ''} active:bg-slate-50 cursor-pointer`}>
+            <div
+              key={i}
+              className={`flex items-center justify-between p-4 ${i < arr.length - 1 ? 'border-b border-slate-50' : ''} card-hover cursor-pointer`}
+            >
               <div className="flex items-center space-x-3 text-gray-700">
                 <span className="text-gray-400">{item.icon}</span>
                 <span className="text-sm">{item.label}</span>
               </div>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
             </div>
           ))}
         </div>
@@ -400,9 +1186,13 @@ const App = () => {
     </div>
   );
 
+  // ==================== 主渲染 ====================
   return (
     <div className="flex items-center justify-center h-screen bg-slate-200">
       <div className="w-[375px] h-[760px] bg-white rounded-[40px] shadow-2xl overflow-hidden relative border-[8px] border-slate-800 flex flex-col">
+        {/* 手机顶部刘海装饰 */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-slate-800 rounded-b-2xl z-50" />
+
         <div className="flex-1 overflow-hidden">
           {isSearching ? renderSearchResults() : (
             activeTab === 'home' ? renderHome() :
@@ -411,20 +1201,12 @@ const App = () => {
             activeTab === 'profile' ? renderProfile() : null
           )}
         </div>
-        {!isSearching && (
-          <div className="h-16 bg-white border-t flex items-center justify-around pb-2">
-            {[
-              {tab:'home', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>, label: '辑典目录'},
-              {tab:'ai', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, label: 'AI 问答'},
-              {tab:'profile', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>, label: '我的权益'}
-            ].map(item => (
-              <button key={item.tab} onClick={() => setActiveTab(item.tab)} className={`flex flex-col items-center space-y-1 ${activeTab === item.tab ? 'text-[#B91C1C]' : 'text-gray-400'}`}>
-                {item.icon}
-                <span className="text-[10px] font-bold">{item.label}</span>
-              </button>
-            ))}
-          </div>
-        )}
+
+        <BottomNav
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          hidden={isSearching}
+        />
       </div>
     </div>
   );
